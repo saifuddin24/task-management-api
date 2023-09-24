@@ -19,7 +19,7 @@ class TeamProjectController extends Controller
         return new TeamProjectCollection($teamProjects);
     }
 
-    public function store(TeamProjectStoreRequest $request): Response
+    public function store(TeamProjectStoreRequest $request): TeamProjectResource
     {
         $teamProject = TeamProject::create($request->validated());
 

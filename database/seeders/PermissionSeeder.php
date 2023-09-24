@@ -129,7 +129,6 @@ class PermissionSeeder extends Seeder
                 'guard_name' => 'sanctum'
             ]
 
-
         ]);
 
     }
