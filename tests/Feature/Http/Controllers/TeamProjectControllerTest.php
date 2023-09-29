@@ -37,7 +37,7 @@ class TeamProjectControllerTest extends TestCase
         $this->assertActionUsesFormRequest(
             \App\Http\Controllers\TeamProjectController::class,
             'store',
-            \App\Http\Requests\TeamProjectStoreRequest::class
+            \App\Http\Requests\TeamProject\TeamProjectStoreRequest::class
         );
     }
 
@@ -88,7 +88,7 @@ class TeamProjectControllerTest extends TestCase
         $this->assertActionUsesFormRequest(
             \App\Http\Controllers\TeamProjectController::class,
             'update',
-            \App\Http\Requests\TeamProjectUpdateRequest::class
+            \App\Http\Requests\TeamProject\TeamProjectUpdateRequest::class
         );
     }
 

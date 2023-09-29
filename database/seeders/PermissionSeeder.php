@@ -64,6 +64,24 @@ class PermissionSeeder extends Seeder
                 'title'=> 'task-activity.delete',
                 'guard_name' => 'sanctum'
             ],
+
+            [
+                'title'=> 'user.read',
+                'guard_name' => 'sanctum'
+            ],
+            [
+                'title'=> 'user.create',
+                'guard_name' => 'sanctum'
+            ],
+            [
+                'title'=> 'user.update',
+                'guard_name' => 'sanctum'
+            ],
+            [
+                'title'=> 'user.delete',
+                'guard_name' => 'sanctum'
+            ],
+
             [
                 'title'=> 'role.read',
                 'guard_name' => 'sanctum'

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TeamStoreRequest;
-use App\Http\Requests\TeamUpdateRequest;
+use App\Http\Requests\Team\TeamStoreRequest;
+use App\Http\Requests\Team\TeamUpdateRequest;
 use App\Http\Resources\TeamCollection;
 use App\Http\Resources\TeamResource;
 use App\Models\Team;

@@ -37,7 +37,7 @@ class RoleControllerTest extends TestCase
         $this->assertActionUsesFormRequest(
             \App\Http\Controllers\Auth\RoleController::class,
             'store',
-            \App\Http\Requests\RoleStoreRequest::class
+            \App\Http\Requests\Role\RoleStoreRequest::class
         );
     }
 

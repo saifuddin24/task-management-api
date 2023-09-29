@@ -2,7 +2,13 @@
 
 namespace App\Exceptions;
 
+use App\Models\Project;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Str;
+use Laravel\Sanctum\Exceptions\MissingAbilityException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -27,4 +33,53 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $e)
+    {
+
+
+
+        if( $e instanceof AuthorizationException || $e instanceof MissingAbilityException) {
+            return response([
+                'message' => 'This action is unauthorized!',
+                'unauthorized' => true
+            ],
+                403
+            );
+        }
+
+
+        if( $e instanceof AuthenticationException ) {
+
+            return response([
+                'message' => $e->getMessage(),
+                'loggedOut' => true
+            ],
+                401
+            );
+        }
+
+        if ($e instanceof ModelNotFoundException && $request->wantsJson() )
+        {
+            $modelName = preg_replace(
+                "/.+[\\\\$]/",
+                "",$e->getModel(),
+                1
+            );
+
+            return response(
+                [
+                    'message' =>
+                        $modelName
+                            ? 'Requested ' . Str::snake($modelName,' ') . ' not found'
+                            : $e->getMessage(),
+                    'success' => false
+                ],
+                404
+            );
+        }
+
+        return parent::render($request, $e );
+    }
+
 }

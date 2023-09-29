@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\UserRrole;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TaskActivityUpdateRequest extends FormRequest
+class UserRoleStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,10 +20,8 @@ class TaskActivityUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'progress_percentage' => ['required', 'integer'],
-            'task_id' => ['required', 'integer'],
-            'created_at' => ['nullable'],
-            'finished_at' => ['nullable'],
+            'role_id' => ['required', 'integer'],
+            'user_id' => ['required', 'integer'],
         ];
     }
 }

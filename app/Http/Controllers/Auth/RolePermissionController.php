@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RolePermissionStoreRequest;
+use App\Http\Requests\RolePermission\RolePermissionStoreRequest;
 use App\Http\Resources\RolePermissionCollection;
 use App\Http\Resources\RolePermissionResource;
 use App\Models\RolePermission;

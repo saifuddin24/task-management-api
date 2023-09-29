@@ -23,6 +23,7 @@ class User extends Auth
         'phone',
         'email',
         'password',
+        'role_id',
         'email_verified_at',
     ];
 

@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\Indexes\IndexRequest;
-use App\Http\Requests\UserStoreRequest;
-use App\Http\Requests\UserUpdateRequest;
+use App\Http\Requests\IndexRequest;
+use App\Http\Requests\User\UserStoreRequest;
+use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -17,6 +17,13 @@ use function response;
 
 class UserController extends Controller
 {
+    protected array $authorized = [
+        'user.read' => [ 'index','show' ],
+        'user.create' => [ 'store' ],
+        'user.update' => [ 'update' ],
+        'user.delete' => [ 'destroy', 'restore' ],
+    ];
+
     public function index(IndexRequest $request): UserCollection
     {
 
@@ -29,7 +36,7 @@ class UserController extends Controller
             'projects' => 'projects.read',
         ];
 
-        $relations = $request->relations( $valid_relations );
+        $relations = $request->relations($valid_relations);
 
         $users = User::with( $relations );
 
@@ -42,7 +49,7 @@ class UserController extends Controller
 
         $userData['password'] = bcrypt($userData['password']);
 
-        $user = User::create($userData);
+        $user = User::query()->create( $userData );
 
         return new UserResource($user);
     }
@@ -76,7 +83,7 @@ class UserController extends Controller
 
     public function login(LoginRequest $request){
 
-        if($request->user()) {
+        if( $request->user() ) {
             return (new UserResource($request->user()))->additional([
                 'already_logged_in' => true,
                 'token' => '',
@@ -87,8 +94,10 @@ class UserController extends Controller
 
         $user = $request->getAuthenticateUser();
 
-        $primary_role = $user->primary_role( )->first( );
-        $another_roles = $user->roles( )->get( );
+        $user->load(['primary_role','roles']);
+
+        $primary_role = $user->primary_role;
+        $another_roles = $user->roles;
 
         $scopes = $primary_role->permissions()->pluck('title')->all();
 

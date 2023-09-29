@@ -1,13 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Project;
 
-use App\Models\Project;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
-class ProjectUpdateRequest extends FormRequest
+class ProjectStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -17,20 +14,19 @@ class ProjectUpdateRequest extends FormRequest
         return true;
     }
 
+
     /**
      * Get the validation rules that apply to the request.
      */
     public function rules(): array
     {
-        $project = $this->route('project');
-
         return [
-            'title' => [ 'required', 'string', 'max:255', "unique:projects,title,{$project->id},id" ],
+            'title' => ['required', 'unique:projects,title', 'string', 'max:255'],
             'slogan' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'deadline' => ['nullable', 'date'],
+            'deadline' => ['nullable', 'date_format:Y-m-d'],
             'working_days_needed' => ['nullable', 'integer'],
-            'manager_id' => ['required', 'integer']
+            'manager_id' => ['sometimes', 'integer','exists:users,id']
         ];
     }
 }

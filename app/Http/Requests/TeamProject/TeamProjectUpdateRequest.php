@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\TeamProject;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserPermissionStoreRequest extends FormRequest
+class TeamProjectUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,8 +20,8 @@ class UserPermissionStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'permission_id' => ['required', 'integer'],
-            'user_id' => ['required', 'integer'],
+            'project_id' => ['required', 'integer'],
+            'team_id' => ['required', 'integer'],
         ];
     }
 }

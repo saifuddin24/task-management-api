@@ -37,7 +37,7 @@ class TeamUserControllerTest extends TestCase
         $this->assertActionUsesFormRequest(
             \App\Http\Controllers\TeamUserController::class,
             'store',
-            \App\Http\Requests\TeamUserStoreRequest::class
+            \App\Http\Requests\TeamUser\TeamUserStoreRequest::class
         );
     }
 

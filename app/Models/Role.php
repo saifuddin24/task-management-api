@@ -10,6 +10,8 @@ class Role extends Model
 {
     use HasFactory;
 
+    protected const super_admin_ids = [1];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -28,5 +30,9 @@ class Role extends Model
     public function permissions(): BelongsToMany
     {
         return $this->belongsToMany(Permission::class, 'role_permission' );
+    }
+
+    public function getIsSuperAdminAttribute(){
+        return in_array( $this->id, self::super_admin_ids );
     }
 }

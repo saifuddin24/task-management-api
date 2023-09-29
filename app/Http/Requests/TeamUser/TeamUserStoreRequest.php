@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\TeamUser;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserRoleStoreRequest extends FormRequest
+class TeamUserStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,8 +20,8 @@ class UserRoleStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'role_id' => ['required', 'integer'],
             'user_id' => ['required', 'integer'],
+            'team_id' => ['required', 'integer'],
         ];
     }
 }

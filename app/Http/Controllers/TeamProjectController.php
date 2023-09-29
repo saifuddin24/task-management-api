@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TeamProjectStoreRequest;
-use App\Http\Requests\TeamProjectUpdateRequest;
+use App\Http\Requests\TeamProject\TeamProjectStoreRequest;
+use App\Http\Requests\TeamProject\TeamProjectUpdateRequest;
 use App\Http\Resources\TeamProjectCollection;
 use App\Http\Resources\TeamProjectResource;
 use App\Models\TeamProject;

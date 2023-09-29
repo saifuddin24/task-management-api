@@ -37,7 +37,7 @@ class ProjectControllerTest extends TestCase
         $this->assertActionUsesFormRequest(
             \App\Http\Controllers\ProjectController::class,
             'store',
-            \App\Http\Requests\ProjectStoreRequest::class
+            \App\Http\Requests\Project\ProjectStoreRequest::class
         );
     }
 
@@ -91,7 +91,7 @@ class ProjectControllerTest extends TestCase
         $this->assertActionUsesFormRequest(
             \App\Http\Controllers\ProjectController::class,
             'update',
-            \App\Http\Requests\ProjectUpdateRequest::class
+            \App\Http\Requests\Project\ProjectUpdateRequest::class
         );
     }
 

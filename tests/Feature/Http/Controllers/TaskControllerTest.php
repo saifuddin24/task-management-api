@@ -37,7 +37,7 @@ class TaskControllerTest extends TestCase
         $this->assertActionUsesFormRequest(
             \App\Http\Controllers\TaskController::class,
             'store',
-            \App\Http\Requests\TaskStoreRequest::class
+            \App\Http\Requests\Task\TaskStoreRequest::class
         );
     }
 
@@ -94,7 +94,7 @@ class TaskControllerTest extends TestCase
         $this->assertActionUsesFormRequest(
             \App\Http\Controllers\TaskController::class,
             'update',
-            \App\Http\Requests\TaskUpdateRequest::class
+            \App\Http\Requests\Task\TaskUpdateRequest::class
         );
     }
 

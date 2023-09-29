@@ -37,7 +37,7 @@ class UserControllerTest extends TestCase
         $this->assertActionUsesFormRequest(
             \App\Http\Controllers\Auth\UserController::class,
             'store',
-            \App\Http\Requests\UserStoreRequest::class
+            \App\Http\Requests\User\UserStoreRequest::class
         );
     }
 
@@ -91,7 +91,7 @@ class UserControllerTest extends TestCase
         $this->assertActionUsesFormRequest(
             \App\Http\Controllers\Auth\UserController::class,
             'update',
-            \App\Http\Requests\UserUpdateRequest::class
+            \App\Http\Requests\User\UserUpdateRequest::class
         );
     }
 

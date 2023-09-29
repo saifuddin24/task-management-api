@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class TaskActivityCollection extends ResourceCollection
 {
+    public static $wrap = 'activities';
     /**
      * Transform the resource collection into an array.
      */

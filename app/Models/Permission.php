@@ -26,6 +26,8 @@ class Permission extends Model
             "project.read", "project.create", "project.update", "project.delete",
             "task.read","task.create","task.update","task.delete",
             "task-activity.read","task-activity.create","task-activity.update","task-activity.delete",
+            /****************************************************************************************/
+            "user.read", "user.create","user.make-active", "user.update", "user.delete",
             "role.read","role.create","role.update","role.delete",
             "permission.read","permission.create","permission.update","permission.delete",
             "user-role.read","user-role.create","user-role.update","user-role.delete",

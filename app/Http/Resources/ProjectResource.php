@@ -15,8 +15,6 @@ class ProjectResource extends JsonResource
     public function toArray(Request $request): array
     {
 
-        TaskCollection::withoutWrapping();
-
         $time_format = config('app.default_time_format');
 
         return [
@@ -31,6 +29,10 @@ class ProjectResource extends JsonResource
             'updated_at' => $this->updated_at->format($time_format),
             'deleted_at' => $this->deleted_at?->format($time_format),
             'tasks' => TaskCollection::make($this->whenLoaded('tasks')),
+            'manager' => UserResource::make($this->whenLoaded('manager')),
+            'assigned_teams' => TaskCollection::make($this->whenLoaded('assigned_teams')),
+            'assigned_persons' => UserCollection::make($this->whenLoaded('assigned_persons')),
         ];
     }
+
 }

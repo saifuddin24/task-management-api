@@ -37,7 +37,7 @@ class UserRoleControllerTest extends TestCase
         $this->assertActionUsesFormRequest(
             \App\Http\Controllers\Auth\UserRoleController::class,
             'store',
-            \App\Http\Requests\UserRoleStoreRequest::class
+            \App\Http\Requests\UserRrole\UserRoleStoreRequest::class
         );
     }
 

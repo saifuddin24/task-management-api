@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserPermissionStoreRequest;
+use App\Http\Requests\UserPermission\UserPermissionStoreRequest;
 use App\Http\Resources\UserPermissionCollection;
 use App\Http\Resources\UserPermissionResource;
 use App\Models\UserPermission;

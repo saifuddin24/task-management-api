@@ -83,7 +83,7 @@ return [
     |
     */
 
-    'default_time_format' => 'l d M Y h:ia',
+    'default_time_format' => 'D d M Y h:ia',
 
     /*
     |--------------------------------------------------------------------------

@@ -17,25 +17,29 @@ class RoleSeeder extends Seeder
 
         $available_permissions = Permission::available_permissions();
 
-        $worker_permission = $available_permissions->only([
+        $worker_permission = Permission::available_permissions()->flip()->only([
             'project.read',
             'task.read', 'task.create', 'task.update', 'task.delete',
-            'activity.read', 'activity.create', 'activity.update', 'activity.delete',
-        ]);
+            'task-activity.read', 'task-activity.create', 'task-activity.update', 'task-activity.delete',
+        ])->keys()->all();
 
         $roles = [
             'Managing Director' => $available_permissions->all(),
 
-            'Project Manager' => $available_permissions->only([
+            'Project Manager' => Permission::available_permissions()->flip()->only([
                 "project.read", "project.create", "project.update", "project.delete",
                 "task.read","task.create","task.update","task.delete",
+                "user.read","user.create",
                 "task-activity.read","task-activity.create","task-activity.update",
-            ]),
-            'Product Manager' => $available_permissions->only([
+            ])->keys()->all(),
+
+            'Product Manager' => Permission::available_permissions()->flip()->only([
                 "project.read", "project.create", "project.update", "project.delete",
+                "user.read",
                 "task.read","task.create","task.update","task.delete",
                 "task-activity.read","task-activity.create","task-activity.update",
-            ]),
+            ])->keys()->all(),
+
             'Designer' => $worker_permission,
             'UI/UX Designer' => $worker_permission,
             'Frontend Developer' => $worker_permission,
@@ -47,6 +51,17 @@ class RoleSeeder extends Seeder
         $inserting_permissions = [];
 
         $index = 1;
+
+
+//        dd(
+//            Permission::available_permissions()->flip()->only([
+//                "project.read", "project.create", "project.update", "project.delete",
+//                "task.read","task.create","task.update","task.delete",
+//                "user.read","user.create",
+//                "task-activity.read","task-activity.create","task-activity.update",
+//            ])->keys()->all()
+//        );
+//
 
         foreach ( $roles as $role => $permissions ) {
             $inserting_roles[] = [
@@ -65,6 +80,8 @@ class RoleSeeder extends Seeder
         }
 
         Role::query()->insertOrIgnore( $inserting_roles );
+
+//        dd($inserting_permissions);
 
         Role::query()->each(function (Role $role) use ($inserting_permissions){
             if( isset($inserting_permissions[$role->name])) {

@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Traits\ValuesAssignable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 class Project extends Model
 {
-    use SoftDeletes,HasFactory;
+    use ValuesAssignable,SoftDeletes,HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -47,7 +50,34 @@ class Project extends Model
 
     public function manager(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'manager_id');
+    }
+
+    public function assigned_teams( ) : BelongsToMany{
+        return $this->belongsToMany(Team::class, 'team_project'); //TODO: Validate whether the relation is valid
+    }
+
+    public function assigned_persons() : BelongsToMany{
+        return $this->belongsToMany( User::class, 'project_user' ); //TODO: Validate whether the relation is valid
+    }
+
+
+    public function assign_person( array $ids ){
+        $this->assigned_persons()
+            ->attach(
+                $this->map_assign_ids(
+                    $ids,'user_id'
+                )
+            );
+    }
+
+    public function assign_teams( array $ids ){
+        $this->assigned_persons()
+            ->attach(
+                $this->map_assign_ids(
+                    $ids,'team_id'
+                )
+            );
     }
 
 }

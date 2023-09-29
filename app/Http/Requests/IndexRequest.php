@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Indexes;
+namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 
 class IndexRequest extends FormRequest
@@ -11,12 +11,15 @@ class IndexRequest extends FormRequest
         return [];
     }
 
-    public function relations():array{
-        $relations = [ ];
+    public function relations(array $relations = []):array{
 
         $relation_requests = explode(',', $this->get('with' ));
 
-        foreach ($this->getRelations() as $relation => $permission ) {
+        $result = [];
+
+        //dd( $relation_requests, [ ...$this->getRelations( ), ...$relations ]  );
+
+        foreach ([...$this->getRelations(), ...$relations] as $relation => $permission ) {
 
             $relation_callback = '';
 
@@ -27,15 +30,14 @@ class IndexRequest extends FormRequest
 
             if( in_array($relation, $relation_requests) && $this->user()->tokenCan( $permission ) ) {
                 if( $relation_callback ) {
-                    $relations[$relation] = $relation_callback;
+                    $result[$relation] = $relation_callback;
                 }else {
-                    $relations[] = $relation;
+                    $result[] = $relation;
                 }
             }
-
         }
 
-        return $relations;
+        return $result;
     }
 
 }

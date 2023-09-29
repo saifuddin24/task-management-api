@@ -10,6 +10,8 @@ class TaskActivity extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -19,6 +21,7 @@ class TaskActivity extends Model
         'progress_percentage',
         'task_id',
         'finished_at',
+        'created_at'
     ];
 
     /**
@@ -29,8 +32,8 @@ class TaskActivity extends Model
     protected $casts = [
         'id' => 'integer',
         'progress_percentage' => 'integer',
-        'created_at' => 'timestamp',
-        'finished_at' => 'timestamp',
+        'created_at' => 'datetime',
+        'finished_at' => 'datetime',
     ];
 
     public function task(): BelongsTo
@@ -38,8 +41,4 @@ class TaskActivity extends Model
         return $this->belongsTo(Task::class);
     }
 
-    public function task(): BelongsTo
-    {
-        return $this->belongsTo(Task::class);
-    }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserRoleStoreRequest;
+use App\Http\Requests\UserRrole\UserRoleStoreRequest;
 use App\Http\Resources\UserRoleCollection;
 use App\Http\Resources\UserRoleResource;
 use App\Models\UserRole;

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Permission;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TeamUpdateRequest extends FormRequest
+class PermissionStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,11 +20,8 @@ class TeamUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string'],
-            'description' => ['nullable', 'string'],
-            'manager_id' => ['required', 'integer'],
-            'created_at' => ['required'],
-            'updated_at' => ['nullable'],
+            'title' => ['required', 'string', 'max:50'],
+            'guard_name' => ['required', 'string', 'max:255'],
         ];
     }
 }

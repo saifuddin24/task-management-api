@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TeamUserStoreRequest;
+use App\Http\Requests\TeamUser\TeamUserStoreRequest;
 use App\Http\Resources\TeamUserCollection;
 use App\Http\Resources\TeamUserResource;
 use App\Models\TeamUser;

@@ -3,19 +3,24 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RolePermissionAssignRequest;
-use App\Http\Requests\RoleStoreRequest;
+use App\Http\Requests\Role\RoleStoreRequest;
+use App\Http\Requests\RolePermission\RolePermissionAssignRequest;
 use App\Http\Resources\RoleCollection;
 use App\Http\Resources\RoleResource;
-use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
 use function response;
 
 class RoleController extends Controller
 {
+    protected array $authorized = [
+        'role.read' => [ 'index','show' ],
+        'role.create' => [ 'store' ],
+        'role.update' => [ 'update' ],
+        'role.delete' => [ 'destroy', 'restore' ],
+    ];
+
     public function index(Request $request): RoleCollection
     {
         $roles = Role::all();

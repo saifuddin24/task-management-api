@@ -21,8 +21,6 @@ class LoginRequest extends FormRequest
         return true;
     }
 
-
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -31,7 +29,8 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone' => ['required', 'string'],
+            'phone' => ['sometimes', 'string'],
+            'email' => ['sometimes', 'string'],
             'password' => ['required', 'string'],
         ];
     }
@@ -46,7 +45,7 @@ class LoginRequest extends FormRequest
         $this->ensureIsNotRateLimited();
 
 
-        if (! $this->attempt($this->only('phone', 'password'), $this->boolean('remember'))) {
+        if (! $this->attempt($this->only('phone', 'email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
