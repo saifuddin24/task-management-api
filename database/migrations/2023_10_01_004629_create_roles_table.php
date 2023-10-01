@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('role_user', function (Blueprint $table) {
-            $table->foreignId('role_id');
-            $table->foreignId('user_id');
+        Schema::create('roles', function (Blueprint $table) {
+            $table->smallIncrements('id');
+            $table->string('name', 50);
+            $table->string('guard_name', 20);
+            $table->timestamp('created_at')->nullable()->default(null);
+            $table->timestamp('updated_at')->nullable()->default(null);
         });
 
         Schema::enableForeignKeyConstraints();
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('role_user');
+        Schema::dropIfExists('roles');
     }
 };

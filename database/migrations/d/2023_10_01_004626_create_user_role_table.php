@@ -13,15 +13,13 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('team_users', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedMediumInteger('user_id');
+        Schema::create('user_role', function (Blueprint $table) {
+            $table->unsignedSmallInteger('role_id');
+            $table->foreign('role_id')->references('id')->on('roles');
+            $table->unsignedMediumInteger('user_id')->index();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->unsignedInteger('team_id');
-            $table->foreign('team_id')->references('id')->on('teams');
-            $table->unique(['user_id', 'team_id']);
-            $table->index(['user_id', 'team_id']);
-            $table->timestamps();
+            $table->timestamp('created_at')->nullable()->default(null);
+            $table->primary(['role_id', 'user_id']);
         });
 
         Schema::enableForeignKeyConstraints();
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('team_users');
+        Schema::dropIfExists('user_role');
     }
 };

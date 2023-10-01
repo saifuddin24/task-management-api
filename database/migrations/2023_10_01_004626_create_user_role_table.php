@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('role_permissions', function (Blueprint $table) {
-            $table->unsignedMediumInteger('permission_id');
-            $table->foreign('permission_id')->references('id')->on('permissions');
+        Schema::create('user_role', function (Blueprint $table) {
             $table->unsignedSmallInteger('role_id');
             $table->foreign('role_id')->references('id')->on('roles');
+            $table->unsignedMediumInteger('user_id')->index();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->timestamp('created_at')->nullable()->default(null);
+            $table->primary(['role_id', 'user_id']);
         });
 
         Schema::enableForeignKeyConstraints();
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('role_permissions');
+        Schema::dropIfExists('user_role');
     }
 };

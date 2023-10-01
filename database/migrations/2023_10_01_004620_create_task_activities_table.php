@@ -15,12 +15,11 @@ return new class extends Migration
 
         Schema::create('task_activities', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('progress_percentage');
-            $table->unsignedInteger('task_id');
-            $table->foreign('task_id')->references('id')->on('tasks');
-            $table->timestamp('created_at')->nullable();
-            $table->timestamp('finished_at')->nullable();
-            $table->index('task_id');
+            $table->unsignedInteger('task_user_id')->index();
+            $table->foreign('task_user_id')->references('id')->on('task_user');
+            $table->unsignedTinyInteger('progress_percentage')->index()->nullable()->default(null);
+            $table->timestamp('created_at')->nullable()->default(null);
+            $table->timestamp('finished_at')->nullable()->default(null);
         });
 
         Schema::enableForeignKeyConstraints();
