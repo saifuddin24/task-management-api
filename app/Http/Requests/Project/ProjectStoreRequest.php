@@ -11,9 +11,24 @@ class ProjectStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
+
+        if( $this->has('manager_id' ) ) {
+            return $this->get('manager_id' ) && $this->user()->primary_role->level <= 2;
+        }
+
         return true;
     }
 
+    public function validated($key = null, $default = null){
+
+        $data = parent::validated($key, $default);
+
+        if( !isset($data['manager_id']) && $this->user()->primary_role->level <= 2 ) {
+            $data['manager_id'] = $this->user()->id;
+        }
+
+        return $data;
+    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -24,7 +39,7 @@ class ProjectStoreRequest extends FormRequest
             'title' => ['required', 'unique:projects,title', 'string', 'max:255'],
             'slogan' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'deadline' => ['nullable', 'date_format:Y-m-d'],
+            'deadline' => ['nullable', 'date_format:Y-m-d','after:today'],
             'working_days_needed' => ['nullable', 'integer'],
             'manager_id' => ['sometimes', 'integer','exists:users,id']
         ];

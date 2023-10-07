@@ -12,6 +12,12 @@ class Role extends Model
 
     protected const super_admin_ids = [1];
 
+    protected const permission_levels = [
+        1 => [1],
+        2 => [2,3],
+        3 => [4,5,6,7,8],
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -32,7 +38,27 @@ class Role extends Model
         return $this->belongsToMany(Permission::class, 'role_permission' );
     }
 
-    public function getIsSuperAdminAttribute(){
-        return in_array( $this->id, self::super_admin_ids );
+    public static function isSuperAdmin( $id ): bool
+    {
+        return in_array( $id, self::super_admin_ids );
+    }
+
+    public function getIsSuperAdminAttribute( ):bool{
+        return self::isSuperAdmin( $this->id );
+    }
+
+    public function getLevelAttribute(){
+        foreach (self::permission_levels as $level  => $ids ) {
+            if( in_array($this->id, $ids)) {
+                return $level;
+            }
+        }
+    }
+
+    public function scopeLevel($query, $value){
+        $levels = self::permission_levels[$value];
+        if( isset($levels ) ){
+            $query->whereIn( 'id', $levels );
+        }
     }
 }

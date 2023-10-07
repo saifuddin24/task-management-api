@@ -40,6 +40,12 @@ class UserController extends Controller
 
         $users = User::with( $relations );
 
+        $users->when($request->get('role-level'), function ($query, $level){
+            $query->whereHas('primary_role', function ($primary_role) use ($level){
+                $primary_role->level($level);
+            });
+        });
+
         return new UserCollection($users->paginate());
     }
 
@@ -84,10 +90,12 @@ class UserController extends Controller
     public function login(LoginRequest $request){
 
         if( $request->user() ) {
-            return (new UserResource($request->user()))->additional([
+            return response([
+                'user' => UserResource::make($request->user()),
                 'already_logged_in' => true,
                 'token' => '',
-            ]);
+                'message' => 'Already logged in by the user',
+            ], 400);
         }
 
         $request->authenticate();
@@ -111,7 +119,8 @@ class UserController extends Controller
 
         return (new UserResource($user))->additional([
             'already_logged_in' => false,
-            'token' => $token
+            'token' => $token,
+            'message' => 'Login Successful!',
         ]);
 
     }

@@ -17,7 +17,7 @@ class RoleResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'key' => Str::kebab($this->name),
+            'key' => strtolower( str_replace(["/"," "],"-", $this->name ) ),
             'has_all_permission' =>  $this->is_super_admin,
             'title' => $this->name,
             'users' => UserCollection::make($this->whenLoaded('users')),

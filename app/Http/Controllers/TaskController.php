@@ -25,9 +25,7 @@ class TaskController extends Controller
 
     public function index(TaskIndexRequest $request): TaskCollection
     {
-        //dd( $request->relations([]) );
-
-        $tasks = Task::query()
+        $tasks = Task::query( )
             ->withMax('task_activities as progress_percentage','progress_percentage')
             ->with(
                 [
@@ -35,7 +33,18 @@ class TaskController extends Controller
                     ...['project']
                 ]
             );
-        return new TaskCollection($tasks->paginate());
+
+        $tasks->when(
+            $request->has('project-id'),
+            function ($task, $project_id) use ($request){
+                $task->where(
+                    'project_id',
+                    $request->get( 'project-id' )
+                );
+            }
+        );
+
+        return new TaskCollection( $tasks->paginate() );
     }
 
     public function store(TaskStoreRequest $request): TaskResource
@@ -61,9 +70,9 @@ class TaskController extends Controller
         return response()->noContent();
     }
 
-    public function restore(Project $trashed_project):ProjectResource
+    public function restore(Task $trashed_task): TaskResource
     {
-        $trashed_project->restore();
-        return new ProjectResource($trashed_project);
+        $trashed_task->restore();
+        return new TaskResource($trashed_task);
     }
 }

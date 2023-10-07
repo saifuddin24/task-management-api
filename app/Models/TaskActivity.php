@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class TaskActivity extends Model
 {
@@ -36,9 +37,9 @@ class TaskActivity extends Model
         'finished_at' => 'datetime',
     ];
 
-    public function task(): BelongsTo
+    public function task(): BelongsToMany
     {
-        return $this->belongsTo(Task::class);
+        return $this->belongsToMany(Task::class,'task_user');
     }
 
 }

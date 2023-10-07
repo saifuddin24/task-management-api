@@ -14,8 +14,8 @@ class Controller extends BaseController
 
     public function __construct()
     {
-        foreach ($this->authorized as $middleware => $methods){
-            $this->middleware('abilities:'.$middleware )->only( $methods );
+        foreach ($this->authorized as $abilities => $methods){
+            $this->middleware('abilities:'.$abilities )->only( $methods );
         }
     }
 

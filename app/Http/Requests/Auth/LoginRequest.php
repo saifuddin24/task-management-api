@@ -29,8 +29,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone' => ['sometimes', 'string'],
-            'email' => ['sometimes', 'string'],
+            'username' => ['required', 'string'],
             'password' => ['required', 'string'],
         ];
     }
@@ -45,11 +44,11 @@ class LoginRequest extends FormRequest
         $this->ensureIsNotRateLimited();
 
 
-        if (! $this->attempt($this->only('phone', 'email', 'password'), $this->boolean('remember'))) {
+        if ( !$this->attempt() ) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'phone' => __('auth.failed',['These credentials do not match our records.']),
+                'username' => __('auth.failed',['These credentials do not match our records.']),
             ]);
         }
 
@@ -87,21 +86,23 @@ class LoginRequest extends FormRequest
         return Str::transliterate(Str::lower($this->input('email')).'|'.$this->ip());
     }
 
-
     protected $user;
 
     public function getAuthenticateUser(){
         return $this->user;
     }
 
-    public function attempt($credentials, $remember = false){
-        $password = $credentials[ 'password' ];
+    public function attempt(){
 
-        unset($credentials[ 'password' ]);
+        $username = $this->get( 'username' );
+        $password = $this->get( 'password' );
 
-        $user = User::query()->where($credentials)->first();
+        $user = User::query()->where(function ($user) use ($username){
+            $user->where('phone', $username);
+            $user->orWhere('email', $username);
+        })->first();
 
-        if( Hash::check( $password, $user->password ) ) {
+        if( $user && Hash::check( $password, $user->password ) ) {
             $this->user = $user;
             return true;
         }

@@ -26,13 +26,16 @@ class ProjectController extends Controller
     public function index(ProjectIndexRequest $request): ProjectCollection
     {
 
-        $projects = Project::query()->with( $request->relations([]) )->paginate();
+        $projects = Project::query()->with( $request->relations([]) );
+        $projects->orderBy('id','DESC');
+
+        $projects = $projects->paginate();
         TaskResource::withoutWrapping();
 
         return new ProjectCollection($projects);
     }
 
-    public function store(ProjectStoreRequest $request): ProjectResource
+    public function store(ProjectStoreRequest $request): ProjectResource|array
     {
 
         $project = Project::query()->create($request->validated());
