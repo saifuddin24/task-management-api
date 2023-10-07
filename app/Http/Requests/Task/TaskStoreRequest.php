@@ -15,12 +15,11 @@ class TaskStoreRequest extends FormRequest
         return true;
     }
 
-    public function attach_employee(){
-        $task = $this->route('task');
+    public function attach_employee(Task $task){
         $employee_ids = $this->get('employee_ids' );
 
-        if( $task instanceof Task && $task->id && is_array($employee_ids) ) {
-            $task->employees()->attach( $employee_ids );
+        if( $task->id && is_array($employee_ids) ) {
+            $task->employees()->attach( $employee_ids, ['created_at' => now()] );
         }
     }
 
@@ -33,7 +32,7 @@ class TaskStoreRequest extends FormRequest
             'title' => [ 'required', 'string' ],
             'deadline' => [ 'required', 'date_format:Y-m-d H:i:s' ],
             'description' => [ 'nullable', 'string' ],
-            //'employee_id' => [ 'required', 'integer','exists:users,id' ],
+            'employee_ids.*' => [ 'sometimes', 'integer','exists:users,id' ],
             'project_id' => [ 'sometimes', 'integer','exists:projects,id' ],
         ];
     }

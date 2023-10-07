@@ -47,9 +47,16 @@ class TaskController extends Controller
         return new TaskCollection( $tasks->paginate() );
     }
 
-    public function store(TaskStoreRequest $request): TaskResource
+    public function store(TaskStoreRequest $request): TaskResource|array
     {
-        $task = Task::query()->create($request->validated());
+
+        $task = Task::query()->create(
+            collect(
+                $request->validated( )
+            )->except('employee_ids')->all()
+        );
+
+        $request->attach_employee( $task );
         return new TaskResource($task);
     }
 
