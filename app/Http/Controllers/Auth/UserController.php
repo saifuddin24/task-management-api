@@ -87,7 +87,15 @@ class UserController extends Controller
         //return new UserResource($request->user());
     }
 
-    public function login(LoginRequest $request){
+    public function logout( Request $request ): Response
+    {
+        if( $request->user() ) {
+            $request->user()->tokens()->delete();
+        }
+        return response()->noContent();
+    }
+
+    public function login( LoginRequest $request ){
 
         if( $request->user() ) {
             return response([

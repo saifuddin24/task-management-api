@@ -42,9 +42,12 @@ Route::bind('activity', function (string $value) {
 });
 
 
+Route::get('/init-app', [AppDataController::class,'index']);
+
 Route::prefix('/users')->group(function(){
     Route::controller(UserController::class)->group(function(){
         Route::post('/login','login');
+        Route::post('/logout','logout');
 
         Route::middleware('auth:sanctum')->group(function(){
             Route::get('/profile','profile');
