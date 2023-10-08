@@ -65,10 +65,41 @@ class TaskController extends Controller
         return new TaskResource($task);
     }
 
-    public function update(TaskUpdateRequest $request, Task $task): TaskResource
+    public function update(TaskUpdateRequest $request, Task $task): TaskResource|Response
     {
         $task->update($request->validated());
         return new TaskResource($task);
+    }
+
+    public function assign(Task $task, Request $request){
+
+        $data = $request->validate([
+            'employee_ids' => 'required|array',
+            'employee_ids.*' => 'integer|exists:users,id'
+        ]);
+
+        $employee_ids = $data['employee_ids'];
+
+        if( $task->id && is_array($employee_ids) ) {
+
+            $task->employees()->whereNotIn('users.id', $employee_ids)->detach();
+
+//            $attaching_ids =
+//                $task->employees()
+//                    ->whereIn('users.id', $employee_ids)
+//                    ->pluck('users.id')
+//                    ->all();
+//
+            $task->employees()->attach( $employee_ids, ['created_at' => now()], false);
+
+            $task->load('employees');
+            return new TaskResource($task);
+        }
+
+        return response([
+            'message' => 'Unknown errors',
+            'success' => false
+        ],400);
     }
 
     public function destroy(Request $request, Task $task): Response

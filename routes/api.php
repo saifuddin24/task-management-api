@@ -99,6 +99,7 @@ Route::middleware('auth:sanctum')->group(function (){
 
     Route::prefix('tasks')->group(function(){
         Route::apiResource('/{task}/activities', TaskActivityController::class);
+        Route::patch('/{task}/assign', [TaskController::class,'assign']);
 
         Route::controller(TaskActivityController::class)->group( function (){
             Route::put('/{task}/activities/{unfinished_activity}/finish', 'finish');
