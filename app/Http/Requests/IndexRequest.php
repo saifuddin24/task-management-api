@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class IndexRequest extends FormRequest
@@ -12,12 +13,12 @@ class IndexRequest extends FormRequest
     }
 
     public function relations(array $relations = []):array{
-
         $relation_requests = explode(',', $this->get('with' ));
-
         $result = [];
 
-        //dd( $relation_requests, [ ...$this->getRelations( ), ...$relations ]  );
+
+
+//        return [...$this->getRelations(), ...$relations];
 
         foreach ([...$this->getRelations(), ...$relations] as $relation => $permission ) {
 

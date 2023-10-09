@@ -24,19 +24,17 @@ class UserController extends Controller
         'user.delete' => [ 'destroy', 'restore' ],
     ];
 
-    public function index(IndexRequest $request): UserCollection
+    public function index(IndexRequest $request): UserCollection|array
     {
 
         $valid_relations = [
-            'primary_role' => [ 'role.read', function($role){
-                $role->select('id','name');
-            }],
+            'primary_role' => 'role.read',
             'roles' => 'role.read',
             'permissions' => 'permission.read',
             'projects' => 'projects.read',
         ];
 
-        $relations = $request->relations($valid_relations);
+        $relations = $request->relations( $valid_relations );
 
         $users = User::with( $relations );
 
@@ -95,9 +93,10 @@ class UserController extends Controller
         return response()->noContent();
     }
 
-    public function login( LoginRequest $request ){
+    public function login( LoginRequest $request )
+    {
 
-        if( $request->user() ) {
+        if ($request->user()) {
             return response([
                 'user' => UserResource::make($request->user()),
                 'already_logged_in' => true,
@@ -110,18 +109,24 @@ class UserController extends Controller
 
         $user = $request->getAuthenticateUser();
 
-        $user->load(['primary_role','roles']);
+        $user->load(['primary_role']);
 
-        $primary_role = $user->primary_role;
-        $another_roles = $user->roles;
+        if(($user->primary_role->id ?? '') == 1){
+            $scopes = ["*"];
+        }else{
+            $user->load(['roles']);
 
-        $scopes = $primary_role->permissions()->pluck('title')->all();
+            $primary_role = $user->primary_role;
+            $another_roles = $user->roles;
 
-        $another_roles->each(function ($role) use (&$scopes) {
-            $scopes = [ ...$scopes, ...$role->permissions()->pluck('title')->all() ];
-        });
+            $scopes = $primary_role->permissions()->pluck('title')->all();
 
-        $scopes = array_values([ ...$scopes, ...$user->permissions()->pluck('title')->all()]);
+            $another_roles->each(function ($role) use (&$scopes) {
+                $scopes = [...$scopes, ...$role->permissions()->pluck('title')->all()];
+            });
+
+            $scopes = array_values([...$scopes, ...$user->permissions()->pluck('title')->all()]);
+        }
 
         $token = $user->createToken( $request->ip(), $scopes )->plainTextToken;
 

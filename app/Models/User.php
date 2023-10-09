@@ -47,10 +47,6 @@ class User extends Auth
         'email_verified_at' => 'datetime',
     ];
 
-    public function tokenCan(string $ability)
-    {
-    }
-
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'user_role');

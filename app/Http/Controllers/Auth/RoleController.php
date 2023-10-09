@@ -8,6 +8,7 @@ use App\Http\Requests\RolePermission\RolePermissionAssignRequest;
 use App\Http\Resources\RoleCollection;
 use App\Http\Resources\RoleResource;
 use App\Models\Role;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use function response;
@@ -23,9 +24,13 @@ class RoleController extends Controller
 
     public function index(Request $request): RoleCollection
     {
-        $roles = Role::all();
+        $roles = Role::query();
 
-        return new RoleCollection($roles);
+        $roles->when( $request->has('hide_md'), function (Builder $roles){
+            $roles->whereNotIn('id', [1]);
+        });
+
+        return new RoleCollection($roles->get());
     }
 
     public function store(RoleStoreRequest $request): RoleResource
