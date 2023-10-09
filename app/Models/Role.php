@@ -10,6 +10,11 @@ class Role extends Model
 {
     use HasFactory;
 
+    protected $appends = [
+        'level',
+        'is_super_admin'
+    ];
+
     protected const super_admin_ids = [1];
 
     protected const permission_levels = [

@@ -21,6 +21,8 @@ class RoleResource extends JsonResource
             'has_all_permission' =>  $this->is_super_admin,
             'title' => $this->name,
             'users' => UserCollection::make($this->whenLoaded('users')),
+            'level' => $this->whenAppended('level'),
+            'is_super_admin' => $this->whenAppended('is_super_admin'),
         ];
     }
 }

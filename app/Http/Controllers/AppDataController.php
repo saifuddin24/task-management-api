@@ -17,7 +17,7 @@ class AppDataController extends Controller
         $user = $request->user();
 
         if( $user instanceof User ) {
-            $user->load('primary_role');
+            $user->load(['primary_role']);
         }
 
         return response([

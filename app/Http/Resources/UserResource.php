@@ -24,6 +24,7 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'required_password_resetting' => $this->required_password_resetting,
             'phone' => $this->phone,
             'email' => $this->email,
             'created_at' => $this->created_at->format($time_format),
