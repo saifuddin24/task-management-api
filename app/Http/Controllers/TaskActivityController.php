@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Requests\TaskActivity\TaskActivityFinishRequest;
-use App\Http\Requests\TaskActivity\TaskActivityIndexRequest;
+use App\Http\Requests\TaskActivity\TaskActivityIndexOrShowRequest;
 use App\Http\Requests\TaskActivity\TaskActivityShowRequest;
 use App\Http\Requests\TaskActivity\TaskShowRequest;
 use App\Http\Requests\TaskActivity\TaskActivityStoreRequest;
@@ -14,8 +14,12 @@ use App\Http\Resources\TaskActivityResource;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Models\TaskActivity;
+use App\Models\TaskAssign;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 
 class TaskActivityController extends Controller
 {
@@ -27,7 +31,7 @@ class TaskActivityController extends Controller
         'task-activity.delete' => [ 'destroy' ],
     ];
 
-    public function index(TaskActivityIndexRequest $request, Task $task): TaskActivityCollection
+    public function index(TaskActivityIndexOrShowRequest $request, Task $task): TaskActivityCollection|Collection
     {
         $taskActivities = $task
                             ->task_activities()
@@ -36,8 +40,18 @@ class TaskActivityController extends Controller
                             ->orderBy('progress_percentage','desc')
                             ->with( [
                                 ...$request->relations([]),
-                            ])
-                            ->paginate();
+                            ]);
+
+        $taskActivities->with('assign.employee');
+
+        $taskActivities->when($request->get('employee_id'), function ( $taskActivities, $employee_id){
+
+            $taskActivities->where('task_user.user_id', $employee_id );
+        });
+
+
+
+        $taskActivities = $taskActivities->get();
 
         $unfinished_activity = $task
             ->task_activities()
@@ -53,6 +67,8 @@ class TaskActivityController extends Controller
 
         $task->load('project');
 
+
+
         return (new TaskActivityCollection($taskActivities))->additional([
             'task' => new TaskResource( $task ),
             'last_unfinished_activity' =>
@@ -62,8 +78,21 @@ class TaskActivityController extends Controller
         ]);
     }
 
-    public function store(TaskActivityStoreRequest $request, Task $task): TaskActivityResource|Response
+    protected function user_assigned(Task $task, Request $request){
+        $task_assigned = $task->assigns()->where('user_id', $request->user()->id );
+        return $task_assigned;
+    }
+
+    public function store(TaskActivityStoreRequest $request, Task $task): TaskActivityResource|Response|array
     {
+
+        $task_assigned = $this->user_assigned($task, $request)->first();
+
+        if( !$task_assigned ) {
+            return response([
+                'message' => 'You are not assigned to the task.',
+            ],403);
+        }
 
         if( $task->task_activities()->whereNull('finished_at')->exists() ) {
             return response([
@@ -71,9 +100,18 @@ class TaskActivityController extends Controller
             ],400);
         }
 
-        $taskActivity = $task->task_activities()->create($request->validated( ));
+        $taskActivity = $task_assigned->activities()->create(
+            array_merge(
+                [
+                    'created_at' => now()
+                ],
+                $request->validated( )
+            )
+        );
 
-        return new TaskActivityResource($taskActivity);
+        return (new TaskActivityResource($taskActivity))->additional([
+            'task' => $task
+        ]);
     }
 
     public function show(TaskActivityShowRequest $request, Task $task, TaskActivity $activity ) : TaskActivityResource
@@ -93,11 +131,19 @@ class TaskActivityController extends Controller
             ]);
     }
 
-    public function finish(TaskActivityFinishRequest $request, Task $task,  TaskActivity $activity): TaskActivityResource
+    public function finish(TaskActivityFinishRequest $request, Task $task,  TaskActivity $activity): TaskActivityResource|Response
     {
-        $task->task_activities()
-            ->find( $activity->id )
-            ->update( $request->validated() );
+        $task_assigned = $this->user_assigned($task, $request)->first();
+
+        if( !$task_assigned instanceof TaskAssign) {
+            return response([
+                'message' => 'You are not assigned to the task.',
+            ],403);
+        }
+
+        $activity = $task_assigned->activities()->find( $activity->id );
+
+        $activity?->update($request->validated());
 
         return new TaskActivityResource($activity);
     }

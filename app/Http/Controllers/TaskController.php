@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Task\TaskIndexRequest;
+use App\Http\Requests\Task\TaskIndexOrShowRequest;
+use App\Http\Requests\Task\TaskShowRequest;
 use App\Http\Requests\Task\TaskStoreRequest;
 use App\Http\Requests\Task\TaskUpdateRequest;
 use App\Http\Requests\TaskActivity\TaskActivityShowRequest;
@@ -11,6 +12,7 @@ use App\Http\Resources\TaskCollection;
 use App\Http\Resources\TaskResource;
 use App\Models\Project;
 use App\Models\Task;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -23,7 +25,7 @@ class TaskController extends Controller
         'task.delete' => [ 'destroy', 'restore' ],
     ];
 
-    public function index(TaskIndexRequest $request): TaskCollection
+    public function index(TaskIndexOrShowRequest $request): TaskCollection
     {
         $tasks = Task::query( )
             ->withMax('task_activities as progress_percentage','progress_percentage')
@@ -44,6 +46,17 @@ class TaskController extends Controller
             }
         );
 
+
+
+        $tasks->when(
+            $request->has('only-my-task'),
+            function (Builder $task ) use ($request){
+               $task->join('task_user as tu','tu.task_id', 'tasks.id');
+               $task->select('tasks.*');
+               $task->where('tu.user_id', $request->user()->id );
+            }
+        );
+
         return new TaskCollection( $tasks->paginate() );
     }
 
@@ -60,8 +73,10 @@ class TaskController extends Controller
         return new TaskResource($task);
     }
 
-    public function show(TaskActivityShowRequest $request, Task $task): TaskResource
+    public function show(TaskShowRequest $request, Task $task): TaskResource
     {
+        $task->load($request->relations());
+
         return new TaskResource($task);
     }
 

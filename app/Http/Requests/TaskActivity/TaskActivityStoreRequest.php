@@ -26,18 +26,14 @@ class TaskActivityStoreRequest extends TaskActivityFormRequest
     {
 
         return [
-            'progress_percentage' => [
-                Rule::requiredIf($this->has('finished_at')), 'integer',
-                $this->max_progress_validation()
+            'created_at' => [
+                'sometimes','date_format:Y-m-d H:i:s', $this->last_finished_at_validation()
             ],
             'finished_at' => [
-                Rule::requiredIf($this->has('progress_percentage')),
-                'date_format:Y-m-d H:i:s', 'after:created_at'
+                'required', 'date_format:Y-m-d H:i:s', 'after:created_at'
             ],
-            'created_at' => [
-                Rule::requiredIf($this->has('finished_at')),
-                'date_format:Y-m-d H:i:s',
-                $this->last_finished_at_validation()
+            'progress_percentage' => [
+                "required", 'integer',  $this->max_progress_validation()
             ],
         ];
     }

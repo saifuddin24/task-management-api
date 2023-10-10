@@ -20,7 +20,7 @@ class RoleSeeder extends Seeder
         $worker_permission = Permission::available_permissions()->flip()->only([
             'project.read',
             'task.read', 'task.create', 'task.update', 'task.delete',
-            'task-activity.read', 'task-activity.create', 'task-activity.update', 'task-activity.delete',
+            'task-activity.read', 'task-activity.create', 'task-activity.update', 'task-activity.delete', 'task-activity.finish',
         ])->keys()->all();
 
         $roles = [

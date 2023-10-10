@@ -39,8 +39,8 @@ class TaskResource extends JsonResource
             'project' => ProjectResource::make(
                 $this->whenLoaded('project')
             ),
-            'employee' => UserResource::make(
-                $this->whenLoaded('employee')
+            'employees' => UserCollection::make(
+                $this->whenLoaded('employees')
             ),
             'manager' => UserResource::make(
                 $this->whenLoaded('manager')

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class IndexRequest extends FormRequest
+class IndexOrShowRequest extends FormRequest
 {
     protected $relations = [];
 

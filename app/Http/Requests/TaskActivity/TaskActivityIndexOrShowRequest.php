@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\TaskActivity;
 
-use App\Http\Requests\IndexRequest;
+use App\Http\Requests\IndexOrShowRequest;
 
-class TaskActivityIndexRequest extends IndexRequest
+class TaskActivityIndexOrShowRequest extends IndexOrShowRequest
 {
     public function authorize(){
         return true;

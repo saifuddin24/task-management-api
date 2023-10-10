@@ -9,11 +9,7 @@ class TaskActivityFinishRequest extends TaskActivityFormRequest
      */
     public function authorize():bool
     {
-        $task = $this->route('task');
-        $activity = $this->route('unfinished_activity');
-
-        return   $task->id == $activity->task_id;
-
+        return true;
     }
 
     /**

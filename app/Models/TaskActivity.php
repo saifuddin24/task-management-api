@@ -42,4 +42,8 @@ class TaskActivity extends Model
         return $this->belongsToMany(Task::class,'task_user');
     }
 
+    public function assign():BelongsTo{
+        return $this->belongsTo(TaskAssign::class,'task_user_id');
+    }
+
 }

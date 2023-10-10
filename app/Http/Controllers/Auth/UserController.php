@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\IndexRequest;
+use App\Http\Requests\IndexOrShowRequest;
 use App\Http\Requests\User\UserStoreRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Resources\UserCollection;
@@ -24,7 +24,7 @@ class UserController extends Controller
         'user.delete' => [ 'destroy', 'restore' ],
     ];
 
-    public function index(IndexRequest $request): UserCollection|array
+    public function index(IndexOrShowRequest $request): UserCollection|array
     {
 
         $valid_relations = [

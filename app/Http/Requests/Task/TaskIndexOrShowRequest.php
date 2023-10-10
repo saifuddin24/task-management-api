@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\Task;
 
-use App\Http\Requests\IndexRequest;
+use App\Http\Requests\IndexOrShowRequest;
 use JetBrains\PhpStorm\ArrayShape;
 
-class TaskIndexRequest extends IndexRequest
+class TaskIndexOrShowRequest extends IndexOrShowRequest
 {
 
     public function authorize( ){

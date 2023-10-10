@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Project\ProjectIndexRequest;
+use App\Http\Requests\Project\ProjectIndexOrShowRequest;
 use App\Http\Requests\Project\ProjectShowRequest;
 use App\Http\Requests\Project\ProjectStoreRequest;
 use App\Http\Requests\Project\ProjectUpdateRequest;
@@ -23,7 +23,7 @@ class ProjectController extends Controller
         'project.delete' => [ 'destroy', 'restore' ],
     ];
 
-    public function index(ProjectIndexRequest $request): ProjectCollection
+    public function index(ProjectIndexOrShowRequest $request): ProjectCollection
     {
 
         $projects = Project::query()->with( $request->relations([]) );

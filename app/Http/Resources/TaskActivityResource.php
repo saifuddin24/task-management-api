@@ -19,6 +19,7 @@ class TaskActivityResource extends JsonResource
             'task_id' => $this->task_id,
             'created_at' => $this->created_at?->format(config('app.default_time_format')),
             'finished_at' => $this->finished_at?->format(config('app.default_time_format')),
+            'related' => $this->whenLoaded('assign' ),
             'task' => TaskResource::make(
                 $this->whenLoaded('task')
             ),
