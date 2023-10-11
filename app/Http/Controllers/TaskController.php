@@ -12,6 +12,7 @@ use App\Http\Resources\TaskCollection;
 use App\Http\Resources\TaskResource;
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -54,6 +55,19 @@ class TaskController extends Controller
                $task->join('task_user as tu','tu.task_id', 'tasks.id');
                $task->select('tasks.*');
                $task->where('tu.user_id', $request->user()->id );
+            }
+        );
+
+        $tasks->when(
+            $request->has('filter-by-auth'),
+            function (Builder $task ) use ($request){
+
+                if( $request->user() instanceof User && $request->user()->primary_role->level >=2 ) {
+                   $task->join('task_user as tu','tu.task_id', 'tasks.id');
+                   $task->select('tasks.*');
+                   $task->where('tu.user_id', $request->user()->id );
+                }
+
             }
         );
 
